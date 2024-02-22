@@ -5,12 +5,13 @@
 
 using namespace std;
 
-// object id variables
+// object id variable
 unsigned int VAO_1;
 unsigned int VBO_1;
-
 unsigned int VAO_2;
 unsigned int VBO_2;
+unsigned int VAOs[2] = {VAO_1, VAO_2};
+unsigned int VBOs[2] = {VBO_1, VBO_2};
 
 
 
@@ -65,27 +66,19 @@ int main(int argc, char **argv)
     myProgram.attach("../shaders/fs.glsl", GL_FRAGMENT_SHADER);
     myProgram.link();
 
-    // buffer
-    glGenVertexArrays(1, &VAO_1);
-    glGenBuffers(1, &VBO_1);
-    glGenVertexArrays(1, &VAO_2);
-    glGenBuffers(1, &VBO_2);
-    glGenBuffers(1, &EBO);
+    for (int i = 0; i <= sizeof(VAOs)/sizeof(VAOs[0]); i += 1) {
+        glGenVertexArrays(1, &VAOs[i]);
+        glGenBuffers(1, &VBOs[i]);
 
+        glBindVertexArray(VAOs[i]);
+        glBindBuffer(GL_ARRAY_BUFFER, VBOs[i]);
 
-    glBindVertexArray(VAO_1);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_1);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)/2, vertices + (i * 9), GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+    }
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)/2, vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(VAO_2);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_2);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)/2, vertices+9, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
+   
 
 
    
@@ -94,8 +87,7 @@ int main(int argc, char **argv)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     */
 
-   unsigned int VAOs[2] = {VAO_1, VAO_2};
-
+ 
 
     while (!glfwWindowShouldClose(window))
     {
@@ -105,7 +97,7 @@ int main(int argc, char **argv)
         myProgram.use();
 
         for (int i = 0; i <= sizeof(VAOs)/sizeof(VAOs[0]); i += 1) {
-             glBindVertexArray(VAOs[i]);
+            glBindVertexArray(VAOs[i]);
             glDrawArrays(GL_TRIANGLES, 0, 3);
             glBindVertexArray(0);
         }
