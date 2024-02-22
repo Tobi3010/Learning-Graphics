@@ -1,0 +1,3 @@
+/mnt/c/dev/learning-graphics/testproject/build/CMakeFiles/FirstWindow.dir
+/mnt/c/dev/learning-graphics/testproject/build/CMakeFiles/edit_cache.dir
+/mnt/c/dev/learning-graphics/testproject/build/CMakeFiles/rebuild_cache.dir
