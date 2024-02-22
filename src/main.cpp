@@ -8,14 +8,25 @@ using namespace std;
 // object id variables
 unsigned int vertexBuffer;
 unsigned int vertexArray;
+unsigned int EBO;
 
 // vertex of points
-
 float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
+     1.0f,  0.0f, 0.0f,  // top right
+     1.0f, 0.5f, 0.0f,  // bottom right
+     0.0f, 0.0f, 0.0f,  // bottom left
+
+    -1.0f,  0.0f, 0.0f,   // top left 
+    -1.0f, -0.5f, 0.0f,
+     0.0f, 0.0f, 0.0f
+};
+
+/*
+unsigned int indices[] = {  // note that we start from 0!
+    0, 1, 3,   // first triangle
+    1, 2, 3    // second triangle
 };  
+*/
 
 int main(int argc, char **argv)
 {
@@ -52,11 +63,18 @@ int main(int argc, char **argv)
     // buffer
     glGenVertexArrays(1, &vertexArray);
     glGenBuffers(1, &vertexBuffer);
+    glGenBuffers(1, &EBO);
+
 
     glBindVertexArray(vertexArray);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    /*
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    */
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 
@@ -69,11 +87,9 @@ int main(int argc, char **argv)
 
         myProgram.use();
 
-        glBindVertexArray(vertexArray);
-
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        
+       glBindVertexArray(vertexArray);
+       glDrawArrays(GL_TRIANGLES, 0, 6);
+       glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
