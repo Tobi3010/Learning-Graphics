@@ -6,8 +6,8 @@
 using namespace std;
 
 // object id variables
-unsigned int vertexBuffer;
-unsigned int vertexArray;
+unsigned int VAO;
+unsigned int VBO;
 unsigned int EBO;
 
 // vertex of points
@@ -61,13 +61,13 @@ int main(int argc, char **argv)
     myProgram.link();
 
     // buffer
-    glGenVertexArrays(1, &vertexArray);
-    glGenBuffers(1, &vertexBuffer);
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
 
 
-    glBindVertexArray(vertexArray);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
 
         myProgram.use();
 
-       glBindVertexArray(vertexArray);
+       glBindVertexArray(VAO);
        glDrawArrays(GL_TRIANGLES, 0, 6);
        glBindVertexArray(0);
 
