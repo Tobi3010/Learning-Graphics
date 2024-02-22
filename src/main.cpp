@@ -60,11 +60,18 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    ShaderProg myProgram;
+    ShaderProg orangeProgram;
     // attachment of shaders to program object
-    myProgram.attach("../shaders/vs.glsl", GL_VERTEX_SHADER);
-    myProgram.attach("../shaders/fs.glsl", GL_FRAGMENT_SHADER);
-    myProgram.link();
+    orangeProgram.attach("../shaders/vs.glsl", GL_VERTEX_SHADER);
+    orangeProgram.attach("../shaders/fs-orange.glsl", GL_FRAGMENT_SHADER);
+    orangeProgram.link();
+
+    ShaderProg yellowProgram;
+    yellowProgram.attach("../shaders/vs.glsl", GL_VERTEX_SHADER);
+    yellowProgram.attach("../shaders/fs-yellow.glsl", GL_FRAGMENT_SHADER);
+    yellowProgram.link();
+
+    ShaderProg programs[2] = {orangeProgram, yellowProgram};
 
     for (int i = 0; i <= sizeof(VAOs)/sizeof(VAOs[0]); i += 1) {
         glGenVertexArrays(1, &VAOs[i]);
@@ -94,9 +101,8 @@ int main(int argc, char **argv)
         glClearColor(0.0f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        myProgram.use();
-
         for (int i = 0; i <= sizeof(VAOs)/sizeof(VAOs[0]); i += 1) {
+            programs[i].use();
             glBindVertexArray(VAOs[i]);
             glDrawArrays(GL_TRIANGLES, 0, 3);
             glBindVertexArray(0);
