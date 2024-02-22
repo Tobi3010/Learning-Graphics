@@ -6,8 +6,14 @@
 using namespace std;
 
 // object id variables
-unsigned int VAO;
-unsigned int VBO;
+unsigned int VAO_1;
+unsigned int VBO_1;
+
+unsigned int VAO_2;
+unsigned int VBO_2;
+
+
+
 unsigned int EBO;
 
 // vertex of points
@@ -15,7 +21,6 @@ float vertices[] = {
      1.0f,  0.0f, 0.0f,  // top right
      1.0f, 0.5f, 0.0f,  // bottom right
      0.0f, 0.0f, 0.0f,  // bottom left
-
     -1.0f,  0.0f, 0.0f,   // top left 
     -1.0f, -0.5f, 0.0f,
      0.0f, 0.0f, 0.0f
@@ -61,24 +66,36 @@ int main(int argc, char **argv)
     myProgram.link();
 
     // buffer
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &VAO_1);
+    glGenBuffers(1, &VBO_1);
+    glGenVertexArrays(1, &VAO_2);
+    glGenBuffers(1, &VBO_2);
     glGenBuffers(1, &EBO);
 
 
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindVertexArray(VAO_1);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_1);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)/2, vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
+    glBindVertexArray(VAO_2);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_2);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)/2, vertices+9, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+
+
+   
     /*
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     */
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+   unsigned int VAOs[2] = {VAO_1, VAO_2};
 
-    glEnableVertexAttribArray(0);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -87,9 +104,11 @@ int main(int argc, char **argv)
 
         myProgram.use();
 
-       glBindVertexArray(VAO);
-       glDrawArrays(GL_TRIANGLES, 0, 6);
-       glBindVertexArray(0);
+        for (int i = 0; i <= sizeof(VAOs)/sizeof(VAOs[0]); i += 1) {
+             glBindVertexArray(VAOs[i]);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glBindVertexArray(0);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
