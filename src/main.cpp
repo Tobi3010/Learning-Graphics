@@ -96,7 +96,7 @@ int main(int argc, char **argv)
         glClear(GL_COLOR_BUFFER_BIT);
 
         for (int i = 0; i <= sizeof(VAOs)/sizeof(VAOs[0]); i += 1) {
-            programs[i].use();
+            orangeProgram.use();
             glBindVertexArray(VAOs[i]);
             glDrawArrays(GL_TRIANGLES, 0, 3);
             glBindVertexArray(0);
