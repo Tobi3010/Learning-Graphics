@@ -14,6 +14,12 @@ ShaderProg::~ShaderProg(){
     glDeleteProgram(m_pId);
 }
 
+
+int ShaderProg::id(){
+    return(m_pId);
+}
+
+
 void ShaderProg::link()
 {
     // links the shader object into the program object
@@ -34,6 +40,8 @@ void ShaderProg::use()
 {
     glUseProgram(m_pId);
 }
+
+
 
 void ShaderProg::attach(const char *fileName, unsigned int shaderType)
 {

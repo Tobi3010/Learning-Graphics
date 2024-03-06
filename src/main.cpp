@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "shaderprog.h"
+#include <cmath>
 
 using namespace std;
 
@@ -12,8 +13,6 @@ unsigned int VAO_2;
 unsigned int VBO_2;
 unsigned int VAOs[2] = {VAO_1, VAO_2};
 unsigned int VBOs[2] = {VBO_1, VBO_2};
-
-
 
 unsigned int EBO;
 
@@ -71,6 +70,13 @@ int main(int argc, char **argv)
     yellowProgram.attach("../shaders/fs-yellow.glsl", GL_FRAGMENT_SHADER);
     yellowProgram.link();
 
+    ShaderProg uniformProgram;
+    uniformProgram.attach("../shaders/vs.glsl", GL_VERTEX_SHADER);
+    uniformProgram.attach("../shaders/uniform.glsl", GL_FRAGMENT_SHADER);
+    uniformProgram.link();
+
+
+
     ShaderProg programs[2] = {orangeProgram, yellowProgram};
 
     for (int i = 0; i <= sizeof(VAOs)/sizeof(VAOs[0]); i += 1) {
@@ -83,6 +89,8 @@ int main(int argc, char **argv)
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)/2, vertices + (i * 9), GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        
     }
    
     /*
@@ -96,10 +104,17 @@ int main(int argc, char **argv)
         glClear(GL_COLOR_BUFFER_BIT);
 
         for (int i = 0; i <= sizeof(VAOs)/sizeof(VAOs[0]); i += 1) {
-            orangeProgram.use();
+            uniformProgram.use();
+
             glBindVertexArray(VAOs[i]);
+
+            double  timeValue = glfwGetTime();
+            float greenValue = static_cast<float>(sin(timeValue) / 2.0 + 0.5);
+            int vertexColorLocation = glGetUniformLocation(uniformProgram.id(), "ourColor");
+            glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+           
             glDrawArrays(GL_TRIANGLES, 0, 3);
-            glBindVertexArray(0);
+            
         }
 
         glfwSwapBuffers(window);
